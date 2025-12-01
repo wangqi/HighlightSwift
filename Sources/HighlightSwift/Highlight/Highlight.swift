@@ -71,11 +71,15 @@ public final class Highlight: Sendable {
     }
 
     private func htmlDataFromText(_ text: String, selectors: String) throws -> Data {
+        // wangqi 2025-11-30: Add white-space: pre-wrap to preserve indentation
+        // NSAttributedString's HTML parser doesn't honor <pre> tag's default whitespace behavior
+        let whitespaceCSS = ".hljs { white-space: pre-wrap; }\n"
         let html = "<style>\n"
+            .appending(whitespaceCSS)
             .appending(selectors)
             .appending("\n</style>")
             .appending("\n<pre><code class=\"hljs\">")
-            .appending(text.trimmingCharacters(in: .whitespacesAndNewlines))
+            .appending(text)
             .appending("</code></pre>")
         return html.data(using: .utf8) ?? Data()
     }
