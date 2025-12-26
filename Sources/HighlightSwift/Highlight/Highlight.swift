@@ -1,10 +1,12 @@
 import Foundation
 
 public final class Highlight: Sendable {
-    private let hljs = HLJS()
-    
+    // wangqi 2025-12-26: Use shared singleton to prevent concurrent JSContext initialization deadlock
+    private static let sharedHLJS = HLJS()
+    private let hljs = Highlight.sharedHLJS
+
     public init() {
-        
+
     }
     
     /// Syntax highlight some text with automatic language detection.
